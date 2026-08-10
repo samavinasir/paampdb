@@ -64,4 +64,3 @@ PAAMPdb is developed and maintained by the Microbial Genomics & Bioinformatics R
 
 - Database: https://mgbio.asab.nust.edu.pk/paampdb
 - GitHub: https://github.com/samavinasir/paampdb.git
-- MGB Research Group: https://mgbio.asab.nust.edu.pk/
