@@ -64,3 +64,9 @@ PAAMPdb is developed and maintained by the Microbial Genomics & Bioinformatics R
 
 - Database: https://mgbio.asab.nust.edu.pk/paampdb
 - GitHub: https://github.com/samavinasir/paampdb.git
+
+## License
+
+PAAMPdb is licensed under the Apache License 2.0.
+
+See the [LICENSE](LICENSE) file for the full license text.
