@@ -1,409 +1,369 @@
-{% extends 'base.html' %} {% block content %} {% load static %}
+{% extends 'base.html' %}
 
-<head>
-    <title>Font Awesome Icons</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
+{% block title %}PAAMPdb &mdash; About Us{% endblock %}
+
+{% block content %}
+
+<head><link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></head>
+
 <style>
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {}
-    
-    a,
-    a:hover,
-    a:focus,
-    a:active {
-        text-decoration: none;
-        outline: none;
+    .about-page {
+        padding-bottom: 55px;
     }
-    
-    a,
-    a:active,
-    a:focus {
-        color: #6f6f6f;
-        text-decoration: none;
-        transition-timing-function: ease-in-out;
-        -ms-transition-timing-function: ease-in-out;
-        -moz-transition-timing-function: ease-in-out;
-        -webkit-transition-timing-function: ease-in-out;
-        -o-transition-timing-function: ease-in-out;
-        transition-duration: .2s;
-        -ms-transition-duration: .2s;
-        -moz-transition-duration: .2s;
-        -webkit-transition-duration: .2s;
-        -o-transition-duration: .2s;
+
+    /* Page introduction — same visual language as Contact/Statistics */
+    .about-hero {
+        margin: 38px 0 34px 0;
+        padding: 38px 30px 40px 30px;
+        text-align: center;
+        border: 1px solid #17243b;
+        border-radius: 8px;
+        background: var(--paamp-teal-dark);
     }
-    
-    ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
+
+    .about-eyebrow {
+        margin: 0 0 9px 0;
+        font-family: var(--font-display);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        color: #5bd0c4;
+        text-transform: uppercase;
     }
-    
-    img {
-        max-width: 100%;
-        height: auto;
-    }
-    
-    section {
-        padding: 60px 0;
-        /* min-height: 100vh;*/
-    }
-    
-    .sec-title {
-        position: relative;
-        z-index: 1;
-        margin-bottom: 60px;
-    }
-    
-    .sec-title .title {
-        position: relative;
-        display: block;
-        font-size: 18px;
-        line-height: 24px;
-        color: #00aeef;
-        font-weight: 500;
-        margin-bottom: 15px;
-    }
-    
-    .sec-title h2 {
-        position: relative;
-        display: block;
-        font-size: 40px;
-        line-height: 1.28em;
-        color: #222222;
-        font-weight: 600;
-        padding-bottom: 18px;
-    }
-    
-    .sec-title h2:before {
-        position: absolute;
-        content: '';
-        left: 0px;
-        bottom: 0px;
-        width: 50px;
-        height: 3px;
-        background-color: #d1d2d6;
-    }
-    
-    .sec-title .text {
-        position: relative;
-        font-size: 16px;
-        line-height: 26px;
-        color: #848484;
-        font-weight: 400;
-        margin-top: 35px;
-    }
-    
-    .sec-title.light h2 {
+
+    .about-hero h1 {
+        margin: 0 0 11px 0;
+        font-family: var(--font-display);
+        font-size: 30px;
+        font-weight: 700;
         color: #ffffff;
     }
-    
-    .sec-title.text-center h2:before {
-        left: 50%;
-        margin-left: -25px;
+
+    .about-hero p {
+        max-width: 740px;
+        margin: 0 auto;
+        font-family: var(--font-body);
+        font-size: 14px;
+        line-height: 1.7;
+        color: #e5edf3;
     }
-    
-    .list-style-one {
-        position: relative;
+
+    /* Research content */
+    .about-section-title {
+        margin-bottom: 18px;
     }
-    
-    .list-style-one li {
-        position: relative;
-        font-size: 16px;
-        line-height: 26px;
-        color: #222222;
-        font-weight: 400;
-        padding-left: 35px;
-        margin-bottom: 12px;
-    }
-    
-    .list-style-one li:before {
-        content: "\f058";
-        position: absolute;
-        left: 0;
-        top: 0px;
-        display: block;
-        font-size: 18px;
-        padding: 0px;
-        color: #ff2222;
-        font-weight: 600;
-        -moz-font-smoothing: grayscale;
-        -webkit-font-smoothing: antialiased;
-        font-style: normal;
-        font-variant: normal;
-        text-rendering: auto;
-        line-height: 1.6;
-        font-family: "Font Awesome 5 Free";
-    }
-    
-    .list-style-one li a:hover {
-        color: #44bce2;
-    }
-    
-    .btn-style-one {
-        position: relative;
-        display: inline-block;
-        font-size: 17px;
-        line-height: 30px;
-        color: #ffffff;
-        padding: 10px 30px;
-        font-weight: 600;
+
+    .about-research-card {
+        background: #fff;
+        border: 1px solid var(--paamp-line);
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(31, 70, 87, 0.05);
         overflow: hidden;
-        letter-spacing: 0.02em;
-        background-color: #35718A;
     }
-    
-    .btn-style-one:hover {
-        background-color: #0794c9;
-        color: #ffffff;
-    }
-    
-    .about-section {
-        position: relative;
-        padding: 250px 0 70px;
-    }
-    
-    .about-section .sec-title {
-        margin-bottom: 45px;
-    }
-    
-    .about-section .content-column {
-        position: relative;
-        margin-bottom: 50px;
-    }
-    
-    .about-section .content-column .inner-column {
-        position: relative;
-        padding-left: 30px;
-    }
-    
-    .about-section .text {
-        margin-bottom: 20px;
-        font-size: 16px;
-        line-height: 26px;
-        color: #848484;
-        font-weight: 400;
-    }
-    
-    .about-section .list-style-one {
-        margin-bottom: 45px;
-    }
-    
-    .about-section .btn-box {
-        position: relative;
-    }
-    
-    .about-section .btn-box a {
-        padding: 15px 50px;
-    }
-    
-    .about-section .image-column {
-        position: relative;
-    }
-    
-    .about-section .image-column .text-layer {
-        position: absolute;
-        right: -110px;
-        top: 50%;
-        font-size: 325px;
-        line-height: 1em;
-        color: #ffffff;
-        margin-top: -175px;
-        font-weight: 500;
-    }
-    
-    .about-section .image-column .inner-column {
-        position: relative;
-        padding-left: 80px;
-        padding-bottom: 0px;
-    }
-    
-    .about-section .image-column .inner-column .author-desc {
-        position: absolute;
-        bottom: 16px;
-        z-index: 1;
-        background: orange;
-        padding: 10px 15px;
-        left: 96px;
-        width: calc(100% - 152px);
-        border-radius: 50px;
-    }
-    
-    .about-section .image-column .inner-column .author-desc h2 {
-        font-size: 21px;
-        letter-spacing: 1px;
-        text-align: center;
+
+    .about-research-header {
+        padding: 17px 20px;
+        background: var(--paamp-teal-dark);
         color: #fff;
+    }
+
+    .about-research-header h2 {
         margin: 0;
-    }
-    
-    .about-section .image-column .inner-column .author-desc span {
-        font-size: 16px;
-        letter-spacing: 6px;
-        text-align: center;
         color: #fff;
-        display: block;
-        font-weight: 400;
+        font-family: var(--font-display);
+        font-size: 18px;
+        font-weight: 700;
     }
-    
-    .about-section .image-column .inner-column:before {
-        content: '';
-        position: absolute;
-        width: calc(50% + 80px);
-        height: calc(100% + 160px);
-        top: -80px;
-        left: 0px;
-        background: transparent;
-        z-index: 0;
-        border: 44px solid #343a40;
+
+    .about-research-body {
+        padding: 22px 24px 24px 24px;
     }
-    
-    .about-section .image-column .image-1 {
-        position: relative;
+
+    .about-research-body p {
+        margin: 0 0 16px 0;
+        font-family: var(--font-body);
+        font-size: 13.5px;
+        line-height: 1.75;
+        color: #5a6a70;
     }
-    
-    .about-section .image-column .image-2 {
-        position: absolute;
-        left: 0;
-        bottom: 0;
+
+    .about-research-body p:last-of-type {
+        margin-bottom: 0;
     }
-    
-    .about-section .image-column .image-2 img,
-    .about-section .image-column .image-1 img {
-        box-shadow: 0 30px 50px rgba(8, 13, 62, .15);
-        border-radius: 46px;
+
+    .about-research-body a {
+        color: var(--paamp-teal);
+        font-weight: 600;
+        text-decoration: none;
     }
-    
-    .about-section .image-column .video-link {
-        position: absolute;
-        left: 70px;
-        top: 170px;
+
+    .about-research-body a:hover {
+        color: var(--paamp-teal-dark);
+        text-decoration: underline;
     }
-    
-    .about-section .image-column .video-link .link {
-        position: relative;
-        display: block;
-        font-size: 22px;
-        color: #191e34;
-        font-weight: 400;
-        text-align: center;
-        height: 100px;
-        width: 100px;
-        line-height: 100px;
-        background-color: #ffffff;
-        border-radius: 50%;
-        box-shadow: 0 30px 50px rgba(8, 13, 62, .15);
-        -webkit-transition: all 300ms ease;
-        -moz-transition: all 300ms ease;
-        -ms-transition: all 300ms ease;
-        -o-transition: all 300ms ease;
-        transition: all 300ms ease;
+
+    .about-actions {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
     }
-    
-    .about-section .image-column .video-link .link:hover {
-        background-color: #191e34;
-        color: #fff
+
+    .about-action {
+        display: inline-block;
+        padding: 8px 15px;
+        border: 1px solid var(--paamp-teal);
+        border-radius: 5px;
+        background: var(--paamp-teal);
+        color: #fff !important;
+        font-family: var(--font-display);
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none !important;
     }
-    
-    div {
-        text-align: justify;
-        text-justify: inter-word;
+
+    .about-action:hover {
+        background: var(--paamp-teal-dark);
+        border-color: var(--paamp-teal-dark);
     }
-    
-    h2 {
-        text-align: center;
-        text-justify: inter-word;
+
+    .about-action.secondary {
+        background: #fff;
+        color: var(--paamp-teal) !important;
     }
-    
-    title {
-        text-align: center;
-        text-justify: inter-word;
+
+    .about-action.secondary:hover {
+        background: #eef4f6;
+        color: var(--paamp-teal-dark) !important;
+        border-color: var(--paamp-teal-dark);
     }
-    
-    section {
-        padding: 0;
+
+    /* Research focus */
+    .focus-section {
+        margin-top: 30px;
+    }
+
+    .focus-heading {
+        margin-bottom: 18px;
+    }
+
+    .focus-heading h2 {
+        margin: 0 0 5px 0;
+        font-family: var(--font-display);
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--paamp-teal-dark);
+    }
+
+    .focus-heading p {
+        margin: 0;
+        font-family: var(--font-body);
+        font-size: 12.5px;
+        color: #7a8a90;
+    }
+
+    .focus-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .focus-card {
+        background: #fff;
+        border: 1px solid var(--paamp-line);
+        border-radius: 8px;
+        padding: 17px 16px 18px;
+        box-shadow: 0 1px 4px rgba(31, 70, 87, 0.04);
+    }
+
+    .focus-card .focus-mark {
+        width: 28px;
+        height: 4px;
+        margin-bottom: 12px;
+        border-radius: 2px;
+        background: var(--paamp-sage);
+    }
+
+    .focus-card:nth-child(2) .focus-mark {
+        background: var(--paamp-teal);
+    }
+
+    .focus-card:nth-child(3) .focus-mark {
+        background: var(--paamp-amber);
+    }
+
+    .focus-card h3 {
+        margin: 0 0 7px 0;
+        font-family: var(--font-display);
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--paamp-teal-dark);
+    }
+
+    .focus-card p {
+        margin: 0;
+        font-family: var(--font-body);
+        font-size: 12px;
+        line-height: 1.6;
+        color: #68777c;
+    }
+
+    .focus-icon {
+        width: 38px;
+        height: 38px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        background: #e8f4f5;
+        color: var(--paamp-teal);
+        font-size: 17px;
+    }
+
+    .focus-card:nth-child(2) .focus-icon {
+        background: #eef6ee;
+        color: var(--paamp-sage);
+    }
+
+    .focus-card:nth-child(3) .focus-icon {
+        background: #f8f2e6;
+        color: var(--paamp-amber);
+    }
+
+    @media only screen and (max-width: 767px) {
+        .about-hero {
+            margin-top: 28px;
+            padding: 30px 18px;
+        }
+
+        .about-hero h1 {
+            font-size: 25px;
+        }
+
+        .about-research-body {
+            padding: 19px 18px;
+        }
+
+        .focus-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 
-<section class="about-section">
+<div class="about-page">
+    <br>
 
-    <div class="container">
-        <div class="row">
-            <div class="content-column col-lg-6 col-md-12 col-sm-12 order-2">
-                <div class="inner-column">
-                    <div class="sec-title">
+    <div class="about-hero">
+        <h1>Microbial Genomics &amp; Bioinformatics</h1>
+        <p>
+            The research group behind PAAMPdb, working at the intersection of
+            microbial genomics, bioinformatics, antimicrobial resistance,
+            reverse vaccinology, and machine learning.
+        </p>
+    </div>
+    <div class="about-research-card">
 
-                        <h3>Microbial Genomics & Bioinformatics Research Group (MGB)</h3>
-                    </div>
-                    <div class="text">We are based at Atta-ur-Rahman School of Applied Biosciences (ASAB), National University of Sciences and Technology (NUST), a lush green campus in the beautiful Capital City Islamabad. Our group is mainly focusing on integrative genomics
-                        approaches; producing and analyzing the public genomic data for studying the genomic epidemiology, evolution and transmission (genetic exchanges) in bacterial pathogens. We are particularly interested in the regional crisis of
-                        growing antimicrobial resistance (AMR) and dissemination of multidrug resistant pathogens both at the community and healthcare settings, we are also like to develop tools and databases for pathogen genomic data analysis, prospective
-                        surveillance and tracking of emerging pathogens in the environment and clinical settings using whole genome sequencing and bioinformatics analysis. Employing reverse vaccinology and machine learning approaches for prediction of
-                        potential immunogenic and therapeutic targets (vaccines and drugs)..
-                        <p>For more information about our lab and current research projects, please visit our <a href="https://mgbio.asab.nust.edu.pk/">website https://mgbio.asab.nust.edu.pk/</a>.</p>
-                    </div>
-                    <div class="btn-box">
-                        <a href="{% url 'contact' %}" class="theme-btn btn-style-one">Contact Us</a>
-                    </div>
-                </div>
+        <div class="about-research-header">
+            <h2>Inregrative Biology Lab</h2>
+        </div>
+
+        <div class="about-research-body">
+
+            <p>
+                We are based at Atta-ur-Rahman School of Applied Biosciences (ASAB),
+                National University of Sciences and Technology (NUST), a lush green
+                campus in the beautiful Capital City Islamabad.
+                Our group is mainly focusing on integrative genomics approaches;
+                producing and analyzing the public genomic data for studying the
+                genomic epidemiology, evolution and transmission
+                in bacterial pathogens.
+                <br>
+                We are particularly interested in the regional crisis of growing
+                antimicrobial resistance (AMR) and dissemination of multidrug
+                resistant pathogens both at the community and healthcare settings.
+
+                We are also like to develop tools and databases for pathogen genomic
+                data analysis, prospective surveillance and tracking of emerging
+                pathogens in the environment and clinical settings using whole genome
+                sequencing and bioinformatics analysis.
+
+                Employing reverse vaccinology and machine learning approaches for
+                prediction of potential immunogenic and therapeutic targets
+                (vaccines and drugs).
+
+                For more information about our lab and current research projects,
+                please visit our
+                <a href="https://mgbio.asab.nust.edu.pk/"
+                   target="_blank"
+                   rel="noopener noreferrer">website</a>.
+            </p>
+
+            <div class="about-actions">
+                <a class="about-action"
+                   href="https://mgbio.asab.nust.edu.pk/"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    Visit IBG Lab
+                </a>
+
+                <a class="about-action secondary" href="{% url 'contact' %}">
+                    Contact Us
+                </a>
             </div>
 
-            <!-- Image Column -->
-            <div class="image-column col-lg-6 col-md-12 col-sm-12">
-                <div class="inner-column wow fadeInLeft">
-                    <div class="author-desc">
-                        <h2>IBG-Group</h2>
-                    </div>
-                    <figure class="image-1">
-                        <a href="#" class="lightbox-image" data-fancybox="images"><img title="IBG_Lab" src="{% static 'img/IBGR.jpg' %}" alt=""></a>
-                    </figure>
+        </div>
+    </div>
 
+    <div class="focus-section">
+
+        <div class="focus-heading">
+            <h2>Research Focus</h2>
+            <p>Core areas represented by the work and resources of the group.</p>
+        </div>
+
+        <div class="focus-grid">
+
+            <div class="focus-card">
+                <div class="focus-icon">
+                    <i class="fas fa-dna"></i>
                 </div>
+                <h3>Integrative Genomics</h3>
+                <p>
+                    Producing and analyzing public genomic data to investigate
+                    bacterial pathogen epidemiology, evolution, and transmission.
+                </p>
+            </div>
+
+
+            <div class="focus-card">
+                <div class="focus-icon">
+                    <i class="fas fa-shield-virus"></i>
+                </div>
+                <h3>Antimicrobial Resistance</h3>
+                <p>
+                    Studying the growing AMR crisis and the dissemination of
+                    multidrug-resistant pathogens in community and healthcare settings.
+                </p>
+            </div>
+
+
+            <div class="focus-card">
+                <div class="focus-icon">
+                    <i class="fas fa-syringe"></i>
+                </div>
+                <h3>Bioinformatics &amp; Vaccine Discovery</h3>
+                <p>
+                    Developing pathogen data resources and applying reverse
+                    vaccinology and machine learning to identify potential targets.
+                </p>
             </div>
 
         </div>
 
+    </div>
 
-    </div>
-    </div>
-</section>
+</div>
+
 {% endblock %}
-<!-- 
-    <h2>
-        About Us
-    </h2>
-
-    <p class="text-justify">
-        AbAMPdb is an open repository to screen potential antimicrobial peptides against Acinetobacter baumannii.
-        Our
-        current index is version 1 and searches more than 150 publications to screen 30 Potential AMPs from
-        different
-        resources. All the data based on AMPs and their interaction with A. baumannii Omp38 protein Uniprot ID is
-        Q6RYW5
-        freely available through search index and can be downloaded via available formats.
-    </p>
-
-    <h2>
-        AbAMPdb Team
-    </h2>
-
-    <p class="text-justify">
-        Please mention yours and also consult the order of arranging names with Dr. Tariq Saeed <br>
-        Farha Anwer (PhD candidate, ASAB, NUST) <br>
-        Dr. Amjad Ali (Associate Professor, ASAB, NUST) <br>
-    </p>
-
-    <h2>
-        AbAMPdb Funding
-    </h2>
-
-    <p class="text-justify">
-        Atta Ur Rahman School of Applied Biosciences (ASAB), NUST <br>
-        Research Centre for Modelling and Simulation (RCMS), NUST
-    </p>
-        <center><img src="{% static 'img/nust.png' %}" width="20%" height="20%"></center> -->*/

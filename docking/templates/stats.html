@@ -1,119 +1,697 @@
-{% extends 'base.html' %} {% block content %} {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-<h1>
-    <center>
-        Statistics
-        <h5>
-            (Total 30 AMPs were evaluated from screening of literature and interact with 30 target proteins)
-        </h5>
-        <h5>
-            Relative AntiMicrobial Score(RAMS) = C+H+Hm+Ha+pI+aI+Inst+BomI/Max score
-            <td>&nbsp;</td><br><br> Absolute RAMS (ARAMS) = RAMS X L
+{% block title %}PAAMPdb &mdash; Statistics{% endblock %}
 
-        </h5>
-    </center>
-</h1>
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
 <style>
-    .h1,
-    h1 {
-        font-size: 2.5rem;
+    .stats-page-header {
+        margin: 40px 0 22px 0;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--paamp-line);
+    }
+
+    .stats-page-header h1 {
+        font-size: 28px;
+        margin: 0 0 8px 0;
+        font-weight: 700;
+    }
+
+    .stats-page-header p {
+        font-family: var(--font-body);
+        font-size: 15px;
+        line-height: 1.65;
+        color: #5a6a70;
+        margin: 0;
+        max-width: 720px;
+    }
+
+    .stats-panel {
+        background: #fff;
+        border: 1px solid var(--paamp-line);
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(31, 70, 87, 0.06);
+        padding: 20px;
+        margin-bottom: 48px;
+    }
+
+    .stats-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .tab-btn {
+        background: #fff;
+        border: 1px solid var(--paamp-teal);
+        color: var(--paamp-teal);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.15s ease-in-out,
+                    color 0.15s ease-in-out,
+                    border-color 0.15s ease-in-out;
+    }
+
+    .tab-btn:hover,
+    .tab-btn:focus {
+        background-color: #eef4f6;
+        color: var(--paamp-teal-dark);
+        border-color: var(--paamp-teal-dark);
+    }
+
+    .tab-btn.active {
+        background-color: var(--paamp-teal);
+        color: #fff;
+        border-color: var(--paamp-teal);
+    }
+
+    .stats-controls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 12px;
+        margin-bottom: 20px;
+        min-height: 34px;
+    }
+
+    .stats-control-label {
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--paamp-teal-dark);
+    }
+
+    .control-select {
+        border: 1px solid var(--paamp-line);
+        border-radius: 6px;
+        padding: 7px 10px;
+        font-family: var(--font-body);
+        font-size: 13.5px;
+        color: var(--paamp-ink);
+        background: #fff;
+        min-width: 170px;
+        transition: border-color 0.15s ease-in-out;
+    }
+
+    .control-select:focus {
+        outline: none;
+        border-color: var(--paamp-teal);
+    }
+
+    .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .metric-card {
+        background: var(--paamp-paper);
+        border: 1px solid var(--paamp-line);
+        border-radius: 8px;
+        padding: 14px 16px;
+        text-align: center;
+    }
+
+    .metric-card .metric-label {
+        display: block;
+        font-family: var(--font-body);
+        font-size: 11px;
+        color: #7a8a90;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 4px;
+    }
+
+    .metric-card .metric-value {
+        display: block;
+        font-family: var(--font-display);
+        font-size: 21px;
+        font-weight: 700;
+        color: var(--paamp-teal-dark);
+    }
+
+    .chart-card {
+        background: #fff;
+        border: 1px solid var(--paamp-line);
+        border-radius: 8px;
+        padding: 18px;
+        min-height: 420px;
+    }
+
+    .chart-wrap {
+        position: relative;
+        width: 100%;
+        height: 420px;
+    }
+
+    #heatmapWrap {
+        overflow-x: auto;
+        min-height: 420px;
+        padding: 10px 0;
+    }
+
+    #heatmapWrap table {
+        border-collapse: collapse;
+        font-family: var(--font-body);
+        font-size: 11px;
+        margin: 0 auto;
+    }
+
+    #heatmapWrap td {
+        padding: 4px 6px;
+        text-align: center;
+    }
+
+    .stats-note {
+        margin-top: 14px;
+        color: #7a8a90;
+        font-family: var(--font-body);
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    @media only screen and (max-width: 767px) {
+        .stats-page-header {
+            margin-top: 28px;
+        }
+
+        .metric-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .chart-card,
+        .stats-panel {
+            padding: 14px;
+        }
+
+        .chart-wrap {
+            height: 360px;
+        }
+
+        #heatmapWrap {
+            min-height: 360px;
+        }
+    }
+
+    @media only screen and (max-width: 480px) {
+        .metric-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .control-select {
+            width: 100%;
+        }
+
+        .stats-controls {
+            align-items: stretch;
+        }
     }
 </style>
-<table border="1" align="center">
-    <tr>
-        <th colspan="2"></th>
-    </tr>
-    <tr>
-        <th>Graph</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Hemolytic_activity.jpg' %}" width="900"></img>
-        </td>
-        <td>Threshold value for Hemolytic activity is between 0-1 and all AMPs were fall in this category</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/MIC.jpg' %}" width="900"></img>
-        </td>
-        <td>MIC value for all the selected AMPs have been reported between 0.5-256</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Solubility.jpg' %}" width="900"></img>
-        </td>
-        <td>Highly soluble peptides help in purification processes and all AMPs are highly soluble</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Molecular weight.jpg' %}" width="900"></img>
-        </td>
-        <td>Standard value for peptide is
-            <10KDa and all the peptides were fall at <5KDa</td>
-                <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Length.jpg' %}" width="900"></img>
-        </td>
-        <td>Optimum length of a peptide falls below
-            <45</td>
-                <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/charge.jpg' %}" width="900"></img>
-        </td>
-        <td>All peptides were cationic except one</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Isoelectric point.jpg' %}" width="900"></img>
-        </td>
-        <td>Distribution of Isoelectric point from experimentally verified dataset of AMPs</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Aliphatic index.jpg' %}" width="900"></img>
-        </td>
-        <td>High Aliphatic index of Selected AMPs</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Instability index.jpg' %}" width="900"></img>
-        </td>
-        <td>Instability Index distribution of AMPs</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Boman Index.jpg' %}" width="900"></img>
-        </td>
-        <td>The potential protein interaction index of AMPs and only one show higher Boman Index that does not fall in the category of potential proteins</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Amphipathicity.jpg' %}" width="900"></img>
-        </td>
-        <td>Threshold value for very hydrophobic peptides according to Eisenberg scale is ≥ 0.68 and 4 peptides showed their very hydrophobic nature. The 1 peptide showed Transmembrane ability due to value close to Threshold value i.e. ± 0.42 and 23 were
-            shown to moderately hydrophobic because of their predicted values close to ±1.10. Most of the AMPs showed hydrophobic and hydrophilic property</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Hydrophobic moment.jpg' %}" width="900"></img>
-        </td>
-        <td>Hydrophobic moment of AMPs showed higher Hydrophobic moment</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/RMSF.jpg' %}" width="900"></img>
-        </td>
-        <td>All peptides have high Root Mean Square Fluctuation values</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-    <tr>
-        <td><img src="{% static 'img/stats/Flexibility.jpg' %}" width="900"></img>
-        </td>
-        <td>All peptides are flexible</td>
-        <!-- considering it is on the same folder that .html file -->
-    </tr>
-</table>
+{% endblock %}
+
+{% block content %}
+
+<div class="stats-page-header">
+    <br>
+    <h1>Statistics</h1>
+    <p>
+        Explore the physicochemical properties of antimicrobial peptides in PAAMPdb
+        through interactive comparisons, distributions, and correlation analysis.
+    </p>
+</div>
+
+<div class="section-title">Dataset Statistics &amp; Visualization</div>
+
+<div class="stats-panel">
+    <div class="stats-tabs" id="tabRow"></div>
+
+    <div class="stats-controls" id="controls"></div>
+
+    <div class="metric-grid" id="metricRow"></div>
+
+    <div class="chart-card" id="chartCard">
+        <div class="chart-wrap" id="chartWrap">
+            <canvas id="ampChart"
+                    role="img"
+                    aria-label="Chart of AMP physicochemical properties">
+                Chart of AMP property values across the PAAMPdb dataset.
+            </canvas>
+        </div>
+
+        <div id="heatmapWrap" style="display:none;"></div>
+    </div>
+
+    <p class="stats-note">
+        Values are calculated from the AMP dataset supplied by the PAAMPdb statistics view.
+    </p>
+</div>
+
+{{ amp_data|json_script:"amp-data" }}
+
+<script>
+    const data = JSON.parse(document.getElementById('amp-data').textContent);
+
+    const props = [
+        "Molecular Weight",
+        "Length",
+        "Net Charge",
+        "Isoelectric Point",
+        "Aliphatic Index",
+        "Instability Index",
+        "Boman Index",
+        "Hydrophobic Moment",
+        "Amphipathicity"
+    ];
+
+    const tabs = [
+        ["bar", "Bar chart"],
+        ["scatter", "Scatter plot"],
+        ["radar", "Radar comparison"],
+        ["heatmap", "Correlation heatmap"]
+    ];
+
+    let activeTab = "bar";
+    let chart = null;
+
+    const TEAL = '#35718A';
+    const TEAL_DARK = '#1f4657';
+    const ORANGE = '#d9662e';
+    const SAGE = '#60B078';
+
+    const tabRow = document.getElementById('tabRow');
+
+    tabs.forEach(([key, label]) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = label;
+        button.className = 'tab-btn';
+        button.dataset.key = key;
+
+        button.addEventListener('click', () => {
+            activeTab = key;
+            syncTabs();
+            renderControls();
+        });
+
+        tabRow.appendChild(button);
+    });
+
+    function syncTabs() {
+        [...tabRow.children].forEach(button => {
+            button.classList.toggle('active', button.dataset.key === activeTab);
+        });
+    }
+
+    function mean(arr) {
+        if (!arr.length) return 0;
+        return arr.reduce((a, b) => a + b, 0) / arr.length;
+    }
+
+    function pearson(a, b) {
+        if (!a.length || a.length !== b.length) return 0;
+
+        const ma = mean(a);
+        const mb = mean(b);
+
+        let num = 0;
+        let da = 0;
+        let db = 0;
+
+        for (let i = 0; i < a.length; i++) {
+            num += (a[i] - ma) * (b[i] - mb);
+            da += (a[i] - ma) ** 2;
+            db += (b[i] - mb) ** 2;
+        }
+
+        if (da === 0 || db === 0) return 0;
+        return num / Math.sqrt(da * db);
+    }
+
+    function setMetrics(vals) {
+        const metricRow = document.getElementById('metricRow');
+
+        if (!vals.length) {
+            metricRow.innerHTML = '';
+            return;
+        }
+
+        const mn = Math.min(...vals);
+        const mx = Math.max(...vals);
+        const av = mean(vals);
+
+        metricRow.innerHTML = `
+            <div class="metric-card">
+                <span class="metric-label">Mean</span>
+                <span class="metric-value">${av.toFixed(2)}</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label">Min</span>
+                <span class="metric-value">${mn.toFixed(2)}</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label">Max</span>
+                <span class="metric-value">${mx.toFixed(2)}</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label">Count</span>
+                <span class="metric-value">${vals.length}</span>
+            </div>
+        `;
+    }
+
+    function makeSelect(options, selected) {
+        const select = document.createElement('select');
+        select.className = 'control-select';
+
+        options.forEach(property => {
+            const option = document.createElement('option');
+            option.value = property;
+            option.textContent = property;
+            select.appendChild(option);
+        });
+
+        if (selected) {
+            select.value = selected;
+        }
+
+        return select;
+    }
+
+    function makeLabel(text) {
+        const label = document.createElement('span');
+        label.className = 'stats-control-label';
+        label.textContent = text;
+        return label;
+    }
+
+    function renderControls() {
+        const controls = document.getElementById('controls');
+        const chartWrap = document.getElementById('chartWrap');
+        const heatmapWrap = document.getElementById('heatmapWrap');
+        const metricRow = document.getElementById('metricRow');
+
+        controls.innerHTML = '';
+
+        const isHeatmap = activeTab === 'heatmap';
+
+        chartWrap.style.display = isHeatmap ? 'none' : 'block';
+        heatmapWrap.style.display = isHeatmap ? 'block' : 'none';
+        metricRow.style.display = isHeatmap ? 'none' : 'grid';
+
+        if (activeTab === 'bar') {
+            const label = makeLabel('Property:');
+            const select = makeSelect(props, props[0]);
+
+            select.addEventListener('change', () => renderBar(select.value));
+
+            controls.appendChild(label);
+            controls.appendChild(select);
+
+            renderBar(props[0]);
+
+        } else if (activeTab === 'scatter') {
+            const labelX = makeLabel('X axis:');
+            const selectX = makeSelect(props, props[0]);
+
+            const labelY = makeLabel('Y axis:');
+            const selectY = makeSelect(props, props[1]);
+
+            [selectX, selectY].forEach(select => {
+                select.addEventListener('change', () => {
+                    renderScatter(selectX.value, selectY.value);
+                });
+            });
+
+            controls.appendChild(labelX);
+            controls.appendChild(selectX);
+            controls.appendChild(labelY);
+            controls.appendChild(selectY);
+
+            renderScatter(props[0], props[1]);
+
+        } else if (activeTab === 'radar') {
+            const label = makeLabel('Compare AMPs:');
+            controls.appendChild(label);
+
+            const defaults = ['PAAMP1', 'PAAMP17', 'PAAMP27'];
+            const availableAmps = data.map(row => row.amp);
+
+            const selectedDefaults = defaults.map((value, index) => {
+                if (availableAmps.includes(value)) return value;
+                return availableAmps[index] || availableAmps[0];
+            });
+
+            const selects = selectedDefaults.map(selected => {
+                const select = makeSelect(availableAmps, selected);
+                select.addEventListener('change', renderRadarFromSelects);
+                controls.appendChild(select);
+                return select;
+            });
+
+            window._radarSels = selects;
+            renderRadarFromSelects();
+
+        } else if (activeTab === 'heatmap') {
+            renderHeatmap();
+        }
+    }
+
+    function renderBar(prop) {
+        const sorted = [...data].sort((a, b) => b[prop] - a[prop]);
+        const vals = sorted.map(row => row[prop]);
+
+        setMetrics(vals);
+
+        if (chart) {
+            chart.destroy();
+        }
+
+        chart = new Chart(document.getElementById('ampChart'), {
+            type: 'bar',
+            data: {
+                labels: sorted.map(row => row.amp),
+                datasets: [{
+                    label: prop,
+                    data: vals,
+                    backgroundColor: TEAL,
+                    borderRadius: 4,
+                    maxBarThickness: 20
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: items => sorted[items[0].dataIndex].name,
+                            label: item => `${item.dataset.label}: ${item.formattedValue}`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 90,
+                            font: { size: 9 }
+                        },
+                        grid: { display: false }
+                    },
+                    y: {
+                        grid: { color: '#dbe4e7' },
+                        title: {
+                            display: true,
+                            text: prop
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderScatter(px, py) {
+        const vals = data.map(row => row[px]);
+
+        setMetrics(vals);
+
+        if (chart) {
+            chart.destroy();
+        }
+
+        chart = new Chart(document.getElementById('ampChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: `${px} vs ${py}`,
+                    data: data.map(row => ({
+                        x: row[px],
+                        y: row[py],
+                        amp: row.amp,
+                        name: row.name
+                    })),
+                    backgroundColor: ORANGE,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: items => items[0].raw.name,
+                            label: item =>
+                                `${px}: ${Number(item.raw.x).toFixed(2)}, ${py}: ${Number(item.raw.y).toFixed(2)}`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: px },
+                        grid: { color: '#dbe4e7' }
+                    },
+                    y: {
+                        title: { display: true, text: py },
+                        grid: { color: '#dbe4e7' }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderRadarFromSelects() {
+        if (!window._radarSels || !window._radarSels.length) return;
+        renderRadar(window._radarSels.map(select => select.value));
+    }
+
+    function renderRadar(amps) {
+        const mins = {};
+        const maxs = {};
+
+        props.forEach(property => {
+            const values = data.map(row => row[property]);
+            mins[property] = Math.min(...values);
+            maxs[property] = Math.max(...values);
+        });
+
+        const colors = [TEAL, ORANGE, SAGE, '#5DCAA5'];
+
+        const datasets = amps
+            .filter(amp => data.some(row => row.amp === amp))
+            .map((amp, index) => {
+                const row = data.find(item => item.amp === amp);
+                const color = colors[index % colors.length];
+
+                return {
+                    label: amp,
+                    data: props.map(property =>
+                        (row[property] - mins[property]) /
+                        (maxs[property] - mins[property] || 1)
+                    ),
+                    backgroundColor: color + '33',
+                    borderColor: color,
+                    pointBackgroundColor: color
+                };
+            });
+
+        const selectedWeights = amps
+            .map(amp => data.find(row => row.amp === amp))
+            .filter(Boolean)
+            .map(row => row["Molecular Weight"]);
+
+        setMetrics(selectedWeights);
+
+        if (chart) {
+            chart.destroy();
+        }
+
+        chart = new Chart(document.getElementById('ampChart'), {
+            type: 'radar',
+            data: {
+                labels: props,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            boxWidth: 10,
+                            font: { size: 11 }
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        min: 0,
+                        max: 1,
+                        ticks: { display: false },
+                        grid: { color: '#dbe4e7' },
+                        pointLabels: { font: { size: 10 } }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderHeatmap() {
+        const matrix = props.map(p1 =>
+            props.map(p2 =>
+                pearson(
+                    data.map(row => row[p1]),
+                    data.map(row => row[p2])
+                )
+            )
+        );
+
+        let html =
+            '<table><tr><td></td>' +
+            props.map(property =>
+                `<td style="font-weight:600; color:#5a6a70; max-width:60px;">${property}</td>`
+            ).join('') +
+            '</tr>';
+
+        matrix.forEach((row, i) => {
+            html +=
+                `<tr><td style="font-weight:600; color:#5a6a70; white-space:nowrap; text-align:right; padding-right:8px;">${props[i]}</td>`;
+
+            row.forEach(value => {
+                const background = value >= 0
+                    ? `rgba(53,113,138,${Math.abs(value)})`
+                    : `rgba(217,102,46,${Math.abs(value)})`;
+
+                const textColor = Math.abs(value) > 0.55 ? '#fff' : '#333';
+
+                html +=
+                    `<td style="width:48px; height:34px; background:${background}; color:${textColor}; font-weight:600;">${value.toFixed(2)}</td>`;
+            });
+
+            html += '</tr>';
+        });
+
+        html += '</table>';
+
+        document.getElementById('heatmapWrap').innerHTML = html;
+    }
+
+    syncTabs();
+    renderControls();
+</script>
+
 {% endblock %}

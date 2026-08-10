@@ -1,195 +1,286 @@
 {% extends './base.html' %}
-{% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+{% block title %}PAAMPdb &mdash; Select AMP &amp; Target Protein{% endblock %}
+
+{% block extra_head %}
 <style>
-    /* Generic Styling, for Desktops/Laptops */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 150px;
+    .search-page-header {
+        margin: 40px 0 22px 0;
     }
 
-    /* Zebra striping */
-    tr:nth-of-type(odd) {
-        background: #eee;
+    .search-page-header h1 {
+        font-size: 28px;
+        margin: 0 0 8px 0;
+        font-weight: 700;
     }
 
-    th {
-        background: #35718A;
-        color: white;
-        font-weight: bold;
+    .search-page-header p {
+        font-family: var(--font-body);
+        font-size: 15px;
+        color: #5a6a70;
+        margin: 0;
+        max-width: 640px;
     }
 
-    td,
-    th {
-        padding: 4px;
-        border: 1px solid #ccc;
-        text-align: left;
-    }
-
-    .alert {
-        position: relative;
-        top: 180px;
-        /* adjust the top value as needed */
-    }
-
-    .blink_me {
-        animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate;
-    }
-
-    @keyframes blinker {
-        to {
-            opacity: 0;
-        }
-    }
-
-    .back-widget-set {
-        background-color: transparent;
-        height: min-content;
-        font-size: 8px;
-    }
-
-    .panel-success {
-        border-color: #d6e9c6;
-    }
-
-    th {
-        background: #35718A;
-        color: rgb(255, 255, 255);
-        font-weight: normal;
-        font-size: small;
-    }
-
-    body {
-        padding-top: -30px;
-        margin-top: -10px;
-    }
-
-    hr {
-        border: 1px solid #4D5061;
-        margin: 10px 0;
+    .search-card {
+        background: #fff;
+        border: 1px solid var(--paamp-line);
+        border-radius: 10px;
+        box-shadow: 0 1px 4px rgba(31, 70, 87, 0.06);
+        padding: 20px 20px 6px 20px;
+        margin-bottom: 48px;
     }
 
     .search-container {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 18px;
     }
 
     .search-input {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        width: 50%;
-        max-width: 400px;
+        flex: 1 1 320px;
+        padding: 10px 14px;
+        border: 1px solid var(--paamp-line);
+        border-radius: 6px;
+        font-family: var(--font-body);
+        font-size: 14px;
+        color: var(--paamp-ink);
+        background-color: var(--paamp-paper);
         box-sizing: border-box;
-        color: #333;
+        transition: border-color 0.15s ease-in-out;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--paamp-teal);
         background-color: #fff;
     }
 
     .search-button {
-        padding: 8px 15px;
-        background-color: #4CAF50;
-        /* Green color */
-        color: white;
+        padding: 10px 20px;
+        background-color: var(--paamp-teal);
+        color: #fff;
         border: none;
-        border-radius: 4px;
+        border-radius: 6px;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 14px;
         cursor: pointer;
-        margin-left: 10px;
-        /* Add some spacing between the input and button */
+        transition: background-color 0.15s ease-in-out;
     }
 
-    .search-button:hover {
-        background-color: #45a049;
-        /* Darker green on hover */
+    .search-button:hover,
+    .search-button:focus {
+        background-color: var(--paamp-teal-dark);
+    }
+
+    .amp-table-wrap {
+        overflow-x: auto;
+    }
+
+    table.amp-table {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+    }
+
+    table.amp-table thead th {
+        background: var(--paamp-teal-dark);
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 12.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        text-align: left;
+        padding: 12px 14px;
+        position: sticky;
+        top: 0;
+    }
+
+    table.amp-table tbody td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--paamp-line);
+        font-family: var(--font-body);
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    table.amp-table tbody tr:nth-of-type(odd) {
+        background: var(--paamp-paper);
+    }
+
+    table.amp-table tbody tr:hover {
+        background: #eef4f6;
+    }
+
+    .amp-id-badge {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--paamp-teal-dark);
+        background: #e4edf0;
+        border-radius: 4px;
+        padding: 3px 8px;
+        white-space: nowrap;
+    }
+
+    .amp-name {
+        font-weight: 600;
+        color: var(--paamp-teal-dark);
+        white-space: nowrap;
+    }
+
+    .amp-sequence {
+        font-family: var(--font-mono);
+        font-size: 12.5px;
+        letter-spacing: 0.02em;
+        color: #445055;
+        max-width: 260px;
+        display: inline-block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .target-select {
+        width: 100%;
+        min-width: 190px;
+        padding: 7px 10px;
+        border: 1px solid var(--paamp-line);
+        border-radius: 6px;
+        font-family: var(--font-body);
+        font-size: 13.5px;
+        color: var(--paamp-ink);
+        background-color: #fff;
+    }
+
+    .target-select:focus {
+        outline: none;
+        border-color: var(--paamp-teal);
+    }
+
+    .row-submit {
+        padding: 6px 10px;
+        background-color: var(--paamp-sage);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background-color 0.15s ease-in-out;
+    }
+
+    .row-submit:hover,
+    .row-submit:focus {
+        background-color: #4c9564;
+    }
+
+    .empty-state {
+        text-align: center;
+        color: #7a8a90;
+        font-family: var(--font-body);
+        font-size: 14px;
+        padding: 28px 14px !important;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .search-button { flex: 1 1 100%; }
     }
 </style>
+{% endblock %}
 
-<body>
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="panel panel-success"></div>
+{% block content %}
 
-        <table class="table table-striped w-auto">
-            <thead>
-                <tr>
-                    <th colspan="6" style="text-align: left;">
-                        <div class="search-container">
-                            <input type="text" class="search-input" id="searchInput" placeholder="Search by AMP Name or AMP-Sequence">
-                            <button class="search-button" onclick="search()">Search</button>
-                        </div>
-                    </th>
-                </tr>
-                <tr>
-                    <th scope="col">select AMP</th>
-                    <th scope="col">AMP name</th>
-                    <th scope="col">AMP-Sequence</th>
-                    <th scope="col" style="padding-left: 20px;"> Select Target protein</th>
-                    <th scope="col">Submit</th>
-                </tr>
-            </thead>
+    <div class="search-page-header">
+        <br>
+        <h1>Select AMP &amp; Target Protein</h1>
+        <p>Choose an antimicrobial peptide and a target protein to submit for docking analysis, or search by AMP name or sequence.</p>
+    </div>
 
-            <tbody>
-                {% for protein in proteins %}
-                <tr class="table-info">
-                    <td> AMP{{ protein.id }}
-                    </td>
-                    <td>{{ protein.name }}</td>
-                    <td>{{ protein.sequence}}</td>
-                    <td>
-                        <select class="mySelect" name="dropdown" onchange="updateHiddenInput(this, {{ protein.id }})" required>
-                            <option value="" disabled selected>Select an option</option>
-                            {% for target in targets %}
-                            <option value="{{ target.id }}">{{ target.target_protein }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td>
-                        <form class="form-inline" method="POST" action="{% url 'create_protein' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="protein_id" value="{{ protein.id }}">
-                            <input type="hidden" name="target_id" id="hidden_target_id_{{ protein.id }}">
-                            <input type="submit" value="Submit">
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="search-card">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search by AMP name or AMP sequence&hellip;">
+            <button type="button" class="search-button" onclick="search()">Search</button>
+        </div>
+
+        <div class="amp-table-wrap">
+            <table class="amp-table">
+                <thead>
+                    <tr>
+                        <th scope="col">AMP</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Sequence</th>
+                        <th scope="col">Target protein</th>
+                        <th scope="col">Submit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for protein in proteins %}
+                    <tr>
+                        <td><span class="amp-id-badge">AMP{{ protein.id }}</span></td>
+                        <td class="amp-name">{{ protein.name }}</td>
+                        <td><span class="amp-sequence">{{ protein.sequence }}</span></td>
+                        <td>
+                            <select class="mySelect target-select" name="dropdown" onchange="updateHiddenInput(this, {{ protein.id }})" required>
+                                <option value="" disabled selected>Select an option</option>
+                                {% for target in targets %}
+                                <option value="{{ target.id }}">{{ target.target_protein }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <form method="POST" action="{% url 'create_protein' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="protein_id" value="{{ protein.id }}">
+                                <input type="hidden" name="target_id" id="hidden_target_id_{{ protein.id }}">
+                                <button type="submit" class="row-submit">Submit</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-state">No AMPs found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
         function updateHiddenInput(selectElement, proteinId) {
             var hiddenInput = document.getElementById('hidden_target_id_' + proteinId);
             hiddenInput.value = selectElement.value;
-            console.log("hiddenInput.value:", hiddenInput.value);
         }
 
         function search() {
-            // Get the value from the search input
             var searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            var rows = document.querySelectorAll('table.amp-table tbody tr');
 
-            // Get all table rows
-            var rows = document.querySelectorAll('tbody tr');
-
-            // Loop through each row and hide those that don't match the search term
             rows.forEach(function(row) {
-                // Get the AMP name and AMP sequence cells' text content
-                var ampName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                var ampSequence = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                var nameCell = row.querySelector('.amp-name');
+                var seqCell = row.querySelector('.amp-sequence');
+                if (!nameCell || !seqCell) { return; }
 
-                // Check if the search term is found in the AMP name or AMP sequence
+                var ampName = nameCell.textContent.toLowerCase();
+                var ampSequence = seqCell.textContent.toLowerCase();
+
                 if (ampName.includes(searchTerm) || ampSequence.includes(searchTerm)) {
-                    // Show the row if the search term is found
                     row.style.display = '';
                 } else {
-                    // Hide the row if the search term is not found
                     row.style.display = 'none';
                 }
             });
         }
+
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') { search(); }
+        });
     </script>
-    <section>
-        <hr />
-    </section>
-</body>
+
 {% endblock %}

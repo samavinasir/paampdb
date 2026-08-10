@@ -21,9 +21,6 @@ def IndexPage(request):
 def AboutUsPage(request):
     return render(request, "about_us.html")
 
-def StatsPage(request):
-    return render(request, "stats.html")
-
 class ContactView(generic.TemplateView):
     """Contact section of the AMPdb tool."""
     model = PDBQuery
@@ -82,3 +79,29 @@ def create_protein(request):
     else:
         return HttpResponse('Invalid request method')
 
+
+def StatsPage(request):
+    def to_float(v):
+        try:
+            return float(v)
+        except (TypeError, ValueError):
+            return 0.0
+
+    amps = AMP.objects.all().order_by('id')
+    data = []
+    for a in amps:
+        data.append({
+            "amp": a.amp_no,
+            "name": a.name,
+            "Molecular Weight": round(to_float(a.molecular_weight), 3),
+            "Length": to_float(a.length),
+            "Net Charge": round(to_float(a.charge), 3),
+            "Isoelectric Point": round(to_float(a.isoelectric_point), 3),
+            "Aliphatic Index": round(to_float(a.aliphatic_index), 3),
+            "Instability Index": round(to_float(a.instability_index), 3),
+            "Boman Index": round(to_float(a.boman_index), 3),
+            "Hydrophobic Moment": round(to_float(a.hydrophobic_moment), 3),
+            "Amphipathicity": round(to_float(str(a.hp).replace('%', '')), 2),
+        })
+
+    return render(request, 'stats.html', {"amp_data": data})

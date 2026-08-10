@@ -1,197 +1,302 @@
 <!DOCTYPE html>
-<html lang="en">
 {% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}PAAMPdb{% endblock %}</title>
+    <link rel="icon" href="{% static 'PAAMP_Logo.png' %}">
 
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 
-<style>
-    .navbar-top {
-        background: #35718A;
-        border-bottom: 4px solid #60B078;
-        color: #FFF;
-        color: rgb(255, 255, 255);
-    }
-    
-    .nav-link {
-        color: white;
-    }
-    
-    .text-white {
-        color: #fff;
-    }
-    
-    .navbar-doublerow>.navbar {
-        display: block;
-        padding: 0px auto;
-        margin: 0px auto;
-        min-height: 25px;
-    }
-    
-    .navbar-doublerow .navbar-top ul>li:first-child>a {
-        color: #fff;
-    }
-    
-    .navbar-doublerow .navbar-top ul>li:nth-child(2)>a {
-        color: #fff;
-    }
-    
-    .navbar-doublerow .navbar-top ul>li:nth-child(3)>a {
-        color: #fff;
-    }
-    /*Down nav*/
-    
-    .navbar-doublerow .navbar-down .navbar-brand {
-        /*navbar brand*/
-        padding: 0px auto;
-        float: left;
-        color: #60B078;
-        font-size: 30px;
-    }
-    
-    .navbar-doublerow .navbar-down ul>li>a {
-        /*Menu items*/
-        font-size: 12.5px;
-        color: #000;
-    }
-    
-    .navbar-doublerow .navbar-down ul>li>a:hover {
-        /*menu hover*/
-        border-bottom: 1px solid #000000;
-        color: #000000;
-    }
-    
-    .navbar-brand {
-        position: absolute;
-        left: 10%;
-        margin-top: -12px;
-        /* position the brand at the center of the navbar */
-        transform: translateX(-50%);
-    }
-</style>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
-<nav class="navbar navbar-default navbar-doublerow navbar-trans navbar-fixed-top">
+    <style>
+        :root {
+            --paamp-ink: #1c2b30;
+            --paamp-teal-dark: #1f4657;
+            --paamp-teal: #35718A;
+            --paamp-sage: #60B078;
+            --paamp-amber: #d9662e;
+            --paamp-paper: #f7f9fb;
+            --paamp-line: #dbe4e7;
+            --font-display: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-body: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'Courier New', ui-monospace, Consolas, monospace;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--paamp-ink);
+            background-color: var(--paamp-paper);
+            margin: 0;
+            padding-top: 84px;
+            padding-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 600;
+            color: var(--paamp-teal-dark);
+            letter-spacing: -0.01em;
+        }
+
+        code, .amp-code, .sequence {
+            font-family: var(--font-mono);
+        }
+
+        a { color: var(--paamp-teal); }
+        a:hover, a:focus { color: var(--paamp-teal-dark); }
+
+        :focus-visible {
+            outline: 2px solid var(--paamp-sage);
+            outline-offset: 2px;
+        }
+
+        /* ---- Signature: residue-chain divider ---- */
+        .residue-divider {
+            height: 6px;
+            width: 100%;
+            background-image: radial-gradient(circle, var(--paamp-sage) 1.6px, transparent 1.6px);
+            background-size: 14px 6px;
+            background-position: center;
+            background-repeat: repeat-x;
+            opacity: 0.9;
+        }
+
+        /* ---- Navbar ---- */
+        .navbar-doublerow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(31, 70, 87, 0.08);
+        }
+
+        .navbar-doublerow > .navbar {
+            display: block;
+            margin: 0;
+            min-height: auto;
+            border: none;
+        }
+
+        .navbar-top {
+            background: var(--paamp-teal-dark);
+            padding: 6px 0;
+        }
+
+        .navbar-top ul.nav {
+            margin: 0;
+        }
+
+        .navbar-top ul.nav > li > a {
+            color: rgba(255, 255, 255, 0.82);
+            font-family: var(--font-body);
+            font-size: 12.5px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            transition: color 0.15s ease-in-out;
+        }
+
+        .navbar-top ul.nav > li > a:hover,
+        .navbar-top ul.nav > li > a:focus {
+            color: #fff;
+            background: transparent;
+        }
+
+        .navbar-down {
+            background: #fff;
+            padding: 10px 0;
+        }
+
+        .navbar-down .navbar-brand {
+            position: static;
+            transform: none;
+            float: left;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            height: 44px;
+        }
+
+        .navbar-down .navbar-brand img {
+            width: 40px;
+            display: block;
+        }
+
+        .navbar-down ul.navbar-nav {
+            margin-top: 10px;
+        }
+
+        .navbar-down ul.navbar-nav > li > a {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--paamp-teal-dark);
+            padding: 10px 16px;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.15s ease-in-out, color 0.15s ease-in-out;
+        }
+
+        .navbar-down ul.navbar-nav > li > a:hover,
+        .navbar-down ul.navbar-nav > li > a:focus {
+            color: var(--paamp-sage);
+            background: transparent;
+            border-bottom-color: var(--paamp-sage);
+        }
+
+        .navbar-toggle {
+            border-color: var(--paamp-line);
+            margin-top: 6px;
+        }
+
+        .navbar-toggle .icon-bar {
+            background-color: var(--paamp-teal-dark);
+        }
+
+        /* ---- Page content ---- */
+        .bg { display: none; }
+
+        main.page-content {
+            flex: 1 0 auto;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1140px;
+        }
+
+        /* ---- Footer ---- */
+        .footer {
+            flex-shrink: 0;
+            background-color: var(--paamp-teal-dark);
+            color: rgba(255, 255, 255, 0.85);
+            font-family: var(--font-body);
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: center;
+            padding: 22px 16px;
+        }
+
+        .footer p { margin: 0; }
+
+        .footer strong {
+            color: #fff;
+            font-family: var(--font-display);
+            letter-spacing: 0.02em;
+        }
+
+        @media only screen and (max-width: 600px) {
+            body { padding-top: 100px; }
+            .navbar-down .navbar-brand { float: none; }
+            .navbar-down ul.navbar-nav { margin-top: 4px; }
+            .footer { font-size: 12px; }
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
     <!-- Master nav -->
-    <!-- top nav -->
-    <nav class="navbar navbar-top">
+    <nav class="navbar navbar-default navbar-doublerow navbar-fixed-top">
 
-        <div class="container">
-            <!-- left nav top -->
-            <ul class="nav navbar-nav pull-left">
-                <li>
-                    <a class="nav-link" href=" {% url 'tutorial' %}">Tutorials</a></li>
-                <li><a class="nav-link " href="{% url 'about_us' %}">About Us</a></li>
-                <li><a class="nav-link " href="{% url 'contact' %}">Contact</a></li>
-            </ul>
-            <!-- right nav top -->
-        </div>
-
-    </nav>
-    <!-- down nav -->
-    <nav class="navbar navbar-down ">
-        <div class="container ">
-            <div class="flex-container ">
-                <div class="navbar-header flex-item ">
-                    <button type="button " class="navbar-toggle collapsed " data-toggle="collapse " data-target="#navbar-collapse ">
-                        <span class="sr-only ">Toggle navigation</span>
-                        <span class="icon-bar "></span>
-                        <span class="icon-bar "></span>
-                        <span class="icon-bar "></span>
-                    </button>
-                    <a class="navbar-brand " href="{% url 'index' %} ">
-
-                        <img src="{% static 'PAAMP_Logo.png' %} " width="50 ">
-                    </a>
-                </div>
-                <div class="collapse navbar-collapse " id="navbar-collapse ">
-                    <ul class="nav navbar-nav flex-item hidden-xs navbar-right ">
-                        <li><a href="{% url 'search' %} " data-toggle="tab">Select AMP-Target protein</a></li>
-
-                        <li><a href="{% url 'stats' %} " data-toggle="tab">Statistics</a></li>
-
-
-                    </ul>
-                </div>
-
+        <!-- Utility row -->
+        <nav class="navbar navbar-top">
+            <div class="container">
+                <ul class="nav navbar-nav pull-left">
+                    <li><a href="{% url 'about_us' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
                 </ul>
             </div>
-        </div>
-        </div>
+        </nav>
+
+        <!-- Brand / primary nav row -->
+        <nav class="navbar navbar-down">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'index' %}">
+                        <img src="{% static 'PAAMP_Logo.png' %}" alt="PAAMPdb">
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{% url 'search' %}">Select AMP&ndash;Target Protein</a></li>
+                        <li><a href="{% url 'stats' %}">Statistics</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="residue-divider" aria-hidden="true"></div>
     </nav>
-</nav>
+    <!-- /master nav -->
 
-<!-- /master nav -->
+    <main class="page-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
 
-<div class="bg "></div>
-<div class="container ">
+    <div class="residue-divider" aria-hidden="true"></div>
+    <footer class="footer">
+        <p>
+            &copy; 2026 Microbial Genomics &amp; Bioinformatics<br>
+            Integrative Biology Laboratory, Atta-ur-Rahman School of Applied Biosciences (ASAB)<br>
+            National University of Sciences and Technology (NUST), Islamabad
+        </p>
+    </footer>
 
-    {% block content %} {% endblock %}
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script>
+        // Responsive alignment for the primary nav row
+        const breakpoints = {
+            small: '(max-width: 600px)',
+            medium: '(min-width: 600px) and (max-width: 991px)',
+            large: '(min-width: 992px)'
+        };
 
-</div>
-</div>
-</div>
-<section>
-    <div>
-        <footer class="footer" style="margin: 0; padding: 0; padding-bottom: 0; margin-top: 0; ">
-            <p> | &copy; 2024 Microbial Genomics & Bioinformatics |<br> Integrative Biology Laboratory, Atta-ur-Rahman School of Applied Biosciences (ASAB), <br> National University of Sciences and Technology (NUST) Islamabad.</p>
-            </footer>
-            </p>
+        const navbarItems = document.querySelectorAll('.navbar-down ul.navbar-nav li');
 
+        function handleScreenSize() {
+            navbarItems.forEach(item => {
+                if (window.matchMedia(breakpoints.small).matches) {
+                    item.style.width = '100%';
+                    item.style.textAlign = 'center';
+                    item.style.borderBottom = '1px solid var(--paamp-line)';
+                } else if (window.matchMedia(breakpoints.medium).matches) {
+                    item.style.width = '50%';
+                    item.style.textAlign = 'center';
+                    item.style.borderBottom = 'none';
+                } else {
+                    item.style.width = 'auto';
+                    item.style.textAlign = 'left';
+                    item.style.borderBottom = 'none';
+                }
+            });
+        }
 
-        </footer>
-        <style>
-            .footer {
-                position: relative;
-                bottom: 0;
-                width: 100%;
-                height: 50%;
-                background-color: #000000;
-                color: white;
-                font-size: 14px;
-                padding: 10px;
-                text-align: center;
-            }
-        </style>
-    </div>
-</section>
-<script>
-    // Define breakpoints for small, medium, and large screens
-    const breakpoints = {
-        small: '(max-width: 600px)',
-        medium: '(min-width: 600px) and (max-width: 991px)',
-        large: '(min-width: 992px)'
-    }
+        window.addEventListener('resize', handleScreenSize);
+        handleScreenSize();
+    </script>
 
-    // Get the navbar items
-    const navbarItems = document.querySelectorAll('.navbar-down ul.navbar-nav li')
-
-    // Add event listener to the window to check for screen size changes
-    window.addEventListener('resize', handleScreenSize)
-
-    // Call the function on page load to apply initial styles
-    handleScreenSize()
-
-    function handleScreenSize() {
-        // Loop through the navbar items
-        navbarItems.forEach(item => {
-            // Check the screen size and apply styles accordingly
-            if (window.matchMedia(breakpoints.small).matches) {
-                // Small screen styles
-                item.style.width = '100%'
-                item.style.textAlign = 'center'
-                item.style.borderBottom = '1px solid #eee'
-            } else if (window.matchMedia(breakpoints.medium).matches) {
-                // Medium screen styles
-                item.style.width = '50%'
-                item.style.textAlign = 'center'
-                item.style.borderBottom = 'none'
-            } else if (window.matchMedia(breakpoints.large).matches) {
-                // Large screen styles
-                item.style.width = 'auto'
-                item.style.textAlign = 'left'
-                item.style.borderBottom = 'none'
-            }
-        })
-    }
-</script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

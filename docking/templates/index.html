@@ -1,97 +1,140 @@
-<!doctype html> {% if csrf_token %} {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
+{% block title %}PAAMPdb &mdash; Antimicrobial Peptides for Pseudomonas aeruginosa{% endblock %}
+
+{% block extra_head %}
 <style>
-.normal-text {
-    font-weight: normal;
-}
+    .hero-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 64px 20px;
+    }
 
-.custom-color {
-    background-color: #35718A!important; /* Dark blue color */
-    border-color: #35718A!important; /* Dark blue color */
-}
-.custom-color:hover,
-.custom-color:focus,
-.custom-color:active {
-    background-color: #35718A!important; /* Darker blue color on hover, focus, and active states */
-    border-color: #35718A!important;/* Darker blue color on hover, focus, and active states */
-}
+    .hero-inner {
+        max-width: 980px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 56px;
+    }
 
+    .hero-mark {
+        flex: 0 0 auto;
+    }
+
+    .hero-mark img {
+        width: 220px;
+        display: block;
+    }
+
+    .hero-text {
+        flex: 1 1 auto;
+        text-align: left;
+    }
+
+    .hero-tagline {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        color: var(--paamp-teal-dark);
+        margin: 0 0 16px 0;
+        line-height: 1.4;
+    }
+
+    .hero-text p.lead {
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.75;
+        color: #445055;
+        font-weight: 400;
+        text-align: left;
+        margin: 0 0 28px 0;
+    }
+
+    .hero-text p.lead em {
+        color: var(--paamp-teal-dark);
+    }
+
+    .btn-enter {
+        display: inline-block;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: 0.01em;
+        color: #fff;
+        background: linear-gradient(135deg, var(--paamp-teal) 0%, var(--paamp-teal-dark) 100%);
+        border: none;
+        padding: 14px 40px;
+        border-radius: 999px;
+        box-shadow: 0 10px 22px rgba(31, 70, 87, 0.28);
+        transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .btn-enter:hover,
+    .btn-enter:focus {
+        color: #fff;
+        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 14px 26px rgba(31, 70, 87, 0.34);
+    }
+
+    .unavailable-notice {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--paamp-teal-dark);
+        font-family: var(--font-body);
+    }
+
+    @media only screen and (max-width: 767px) {
+        .hero-inner {
+            flex-direction: column;
+            gap: 28px;
+            text-align: center;
+        }
+
+        .hero-text {
+            text-align: center;
+        }
+
+        .hero-mark img { width: 150px; }
+        .hero-tagline { font-size: 18px; }
+        .hero-text p.lead { font-size: 15px; text-align: left; }
+    }
 </style>
+{% endblock %}
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
+{% block content %}
+{% if csrf_token %}
 
-<body>
-    <div class="container">
-        
-        <br>
-        <link rel="stylesheet" type="text/css" href="{% static 'abampdb/abampdb/style.css' %}">
-        <center><img src="{% static 'PAAMP_Logo.png' %}" width="30%" height="20%"></center><br>
-        <div class="cover" style="background-image: url({% static 'amp.jpg' %});
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: bottom;">
+    <div class="hero-wrap">
+        <div class="hero-inner">
+            <div class="hero-mark">
+                <br><br>
+                <img src="{% static 'PAAMP_Logo.png' %}" alt="PAAMPdb logo">
+            </div>
 
+            <div class="hero-text">
+                <h1 class="sr-only">PAAMPdb</h1>
+                <br><br><br>
+                <p class="hero-tagline">Curated Antimicrobial Peptides Targeting Pseudomonas aeruginosa</p>
 
-            
+                <p class="lead">
+                    PAAMPdb is a curated database resource specializing in antimicrobial peptides (AMPs) tailored to combat
+                    <em>Pseudomonas aeruginosa</em>. The database offers detailed experimental insights into reported AMPs,
+                    including their antimicrobial effectiveness, range of homology structural models, and residue&#8209;level
+                    interactions of AMPs with target proteins.
+                </p>
 
-            <h5 class="text-center"><br><span class="normal-text">PAAMPdb is a curated database resource specializing in antimicrobial peptides (AMPs) tailored to combat <em>Pseudomonas aeroginosa</em>. The database offers detailed experimental insights into reported AMPs, including their antimicrobial effectiveness, range of homology structural models, and residue level interactions of AMPs with target proteins.</span><br><br></h5>
-
-            <br><br> <!-- Add space before -->
-            <center><a href="{% url 'search' %}" class="btn btn-primary btn-md active custom-color" role="button" aria-pressed="true">Enter PAAMPdb</a></center>
-            <br> <!-- Add space after -->
-
-
-
-            {% else %}
-            <p>Page unavailable. Pleasse try again soon.</p>
-            {% endif %}
+                <a href="{% url 'search' %}" class="btn-enter" role="button">Enter PAAMPdb</a>
+            </div>
         </div>
-
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </div>
-    <section>
-        <div>
-            <footer class="footer">
-                <p> | &copy; 2024 Microbial Genomics & Bioinformatics |<br> Integrative Biology Laboratory, Atta-ur-Rahman School of Applied Biosciences (ASAB), <br> National University of Sciences and Technology (NUST) Islamabad.</p>
-            </footer>
-            <style>
-                .footer {
-                    position: fixed;
-                    bottom: -15px;
-                    width: 100%;
-                    background-color: #000000;
-                    color: white;
-                    font-size: 14px;
-                    text-align: center;
-                    padding: 0px 0;
-                }
-                
-                @media only screen and (max-width: 600px) {
-                    /* Adjust footer styles for small screens */
-                    .footer {
-                        font-size: 12px;
-                    }
-                }
-                
-                @media only screen and (max-width: 400px) {
-                    /* Further adjustments for smaller screens */
-                    .footer {
-                        font-size: 10px;
-                    }
-                }
-            </style>
-        </div>
-    </section>
 
-</body>
-
-</html>
+{% else %}
+    <div class="unavailable-notice">
+        <p>Page unavailable. Please try again soon.</p>
+    </div>
+{% endif %}
+{% endblock %}
