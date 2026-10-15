@@ -21,7 +21,7 @@ A curated database resource for experimentally reported antimicrobial peptides, 
 **PAAMPdb** is a curated database resource specializing in experimentally reported antimicrobial peptides (AMPs) targeting *Pseudomonas aeruginosa*. The database brings together curated experimental information on reported AMPs, including antimicrobial effectiveness, peptide-related information, structural models, and residue-level interactions between AMPs and target proteins.
 
 <p align="center">
-  <img src="assets/paampdb-overview.svg" alt="PAAMPdb data overview" width="100%">
+  <img src="assets/paampdb-overview.png" alt="PAAMPdb data overview" width="100%">
 </p>
 
 <a id="access"></a>
