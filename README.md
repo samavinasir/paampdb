@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="PAAMP_Logo.png" alt="PAAMPdb" width="320">
+<img src="assets/PAAMP_Logo.png" alt="PAAMPdb" width="320">
 
 ### Curated Antimicrobial Peptides Targeting *Pseudomonas aeruginosa*
 
