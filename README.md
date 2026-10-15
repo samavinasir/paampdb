@@ -1,14 +1,12 @@
 <div align="center">
 
-<img src="assets/PAAMP_Logo.png" alt="PAAMPdb" width="320">
+<img src="PAAMP_Logo.png" alt="PAAMPdb" width="320">
 
 ### Curated Antimicrobial Peptides Targeting *Pseudomonas aeruginosa*
 
 A curated database resource for experimentally reported antimicrobial peptides, their structural models, and residue-level interactions with target proteins.
 
 <img src="assets/chips.svg" alt="Curated database · P. aeruginosa · AMP–target interactions · Apache 2.0" height="34">
-
-<br><br>
 
 <a href="https://mgbio.asab.nust.edu.pk/paampdb/search/"><img src="assets/btn/enter.svg" alt="Enter PAAMPdb" height="40"></a>
 <a href="https://mgbio.asab.nust.edu.pk/paampdb/search/"><img src="assets/btn/search.svg" alt="Search Database" height="40"></a>
